@@ -3,7 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Minimap
+  - Wall
+  - Ground
+  - Object
+  - Obstacle
+  - Enemy
+  - LineOfSight
   layers:
   - Default
   - TransparentFX
@@ -13,9 +20,9 @@ TagManager:
   - UI
   - Object
   - Goal
-  - 
-  - 
-  - 
+  - Wall
+  - LineOfSight
+  - Player
   - 
   - 
   - 

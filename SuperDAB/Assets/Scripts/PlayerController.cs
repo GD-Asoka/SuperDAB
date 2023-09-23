@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        groundVertical.SetActive(false);
+        //groundVertical.SetActive(false);
         //rb = GetComponent<Rigidbody>();
         characterController = GetComponent<CharacterController>();
     }
@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
         xInput = Input.GetAxis("Horizontal");
         yInput = Input.GetAxis("Vertical");
 
-        if (xInput != 0) Move();
+        if (xInput != 0 || yInput != 0) Move();
 
         if (Input.GetKeyDown(KeyCode.W) && characterController.isGrounded)
         {
@@ -66,10 +66,10 @@ public class PlayerController : MonoBehaviour
     private void ToggleGroundPlane(bool rotated)
     {
         Vector3 newPos = transform.position - new Vector3(0, yOffset, 0);
-        groundVertical.transform.position = newPos;
+        //groundVertical.transform.position = newPos;
         //groundHorizontal.transform.position = newPos;
-        groundVertical.SetActive(rotated);
-        groundHorizontal.SetActive(!rotated);
+        //groundVertical.SetActive(rotated);
+        //groundHorizontal.SetActive(!rotated);
     }
 
     private void Move()
@@ -82,6 +82,10 @@ public class PlayerController : MonoBehaviour
         {
             characterController.Move(Vector3.back * moveSpeed * xInput * Time.deltaTime);
         }
+        //if(xInput != 0)
+        //    characterController.Move(Vector3.right * moveSpeed * xInput * Time.deltaTime);
+        //if(yInput !=0)
+        //    characterController.Move(Vector3.forward * moveSpeed * yInput * Time.deltaTime);
     }
 
     private void Jump()

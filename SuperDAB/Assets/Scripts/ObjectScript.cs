@@ -4,16 +4,23 @@ using UnityEngine;
 
 public class ObjectScript : MonoBehaviour
 {
-    private bool levitate = false;
+    public bool levitate = false;
+    public bool xAxisObject = true;
     public float levitateLimit = 5;
+    public PlayerController player;
+
+    private void Start()
+    {
+       GetComponent<MeshRenderer>().enabled = false;
+    }
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            levitate = !levitate;
-            MoveObject();
-        }
+        //if(Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    levitate = !levitate;
+        //    MoveObject();
+        //}
     }
 
     private void MoveObject()
@@ -29,4 +36,21 @@ public class ObjectScript : MonoBehaviour
             transform.position += newPos;
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("LineOfSight"))
+        {
+            GetComponent<MeshRenderer>().enabled = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("LineOfSight"))
+        {
+            GetComponent<MeshRenderer>().enabled = false;
+        }
+    }
+
 }
