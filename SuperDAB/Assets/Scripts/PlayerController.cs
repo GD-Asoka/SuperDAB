@@ -74,18 +74,18 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        if (!rotated)
-        {
-            characterController.Move(Vector3.right * moveSpeed * xInput * Time.deltaTime);
-        }
-        else
-        {
-            characterController.Move(Vector3.back * moveSpeed * xInput * Time.deltaTime);
-        }
-        //if(xInput != 0)
+        //if (!rotated)
+        //{
         //    characterController.Move(Vector3.right * moveSpeed * xInput * Time.deltaTime);
-        //if(yInput !=0)
-        //    characterController.Move(Vector3.forward * moveSpeed * yInput * Time.deltaTime);
+        //}
+        //else
+        //{
+        //    characterController.Move(Vector3.back * moveSpeed * xInput * Time.deltaTime);
+        //}
+        if (xInput != 0)
+            characterController.Move(Vector3.right * moveSpeed * xInput * Time.deltaTime);
+        if (yInput != 0)
+            characterController.Move(Vector3.forward * moveSpeed * yInput * Time.deltaTime);
     }
 
     private void Jump()
