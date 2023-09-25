@@ -11,6 +11,8 @@ TagManager:
   - Obstacle
   - Enemy
   - LineOfSight
+  - ZCam
+  - XCam
   layers:
   - Default
   - TransparentFX
