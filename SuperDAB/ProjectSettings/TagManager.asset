@@ -13,6 +13,7 @@ TagManager:
   - LineOfSight
   - ZCam
   - XCam
+  - Barrier
   layers:
   - Default
   - TransparentFX
