@@ -22,6 +22,17 @@ public class GameManager : MonoBehaviour
 
     public void RestartLevel()
     {
-        SceneManager.LoadScene(0);
-    }    
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    } 
+    
+    public void LoadNextLevel()
+    {
+        if (SceneManager.GetSceneByBuildIndex(SceneManager.GetActiveScene().buildIndex + 1) != null)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);            
+        }           
+
+        else
+            print("no more scenes");
+    }
 }
