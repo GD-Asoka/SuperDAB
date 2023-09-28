@@ -6,7 +6,6 @@ public class PlayerController : MonoBehaviour
 {
     public bool rotated = false;
     private float xInput, yInput;
-    public GameObject groundHorizontal, groundVertical;
     public float xOffset = 1, yOffset = 5, zOffset = 1;
     private Rigidbody rb;
     
@@ -19,67 +18,32 @@ public class PlayerController : MonoBehaviour
     private CharacterController characterController;
     private Vector3 playerVelocity;
     private bool isGrounded;
-    public float playerSpeed = 2.0f; // Adjust the movement speed as needed.
-    public float jumpHeight = 1.0f;  // Adjust the jump height as needed.
+    public float playerSpeed = 2.0f; 
+    public float jumpHeight = 1.0f;  
     private float gravityValue = -9.81f;
 
     [Header("Grounded")]
     public GameObject groundCheckSphere;
     public float groundCheckDistance;
     public LayerMask groundLayer;
-
+    public GameObject playerMesh;
+    public float rotationSpeed = 5.0f;
 
     private void Awake()
     {
-        //groundVertical.SetActive(false);
-        //rb = GetComponent<Rigidbody>();
         characterController = GetComponent<CharacterController>();
     }
 
     private void Start()
     {
         originalSize = transform.localScale;
-        //InvokeRepeating(nameof(CheckMovement), 0, timeBetweenMovement);
     }
 
     private void Update()
     {
-        //    if (Input.GetButtonDown("Fire"))
-        //    {
-        //        if (!rotated)
-        //        {
-        //            transform.Rotate(new Vector3(0, 90, 0));
-        //            rotated = true;
-        //            ToggleGroundPlane(rotated);
-        //        }
-        //        else
-        //        {
-        //            transform.Rotate(new Vector3(0, -90, 0));
-        //            rotated = false;
-        //            ToggleGroundPlane(rotated);
-        //        }
-        //    }
-        //    xInput = Input.GetAxisRaw("Horizontal");
-        //    yInput = Input.GetAxisRaw("Vertical");
+        xInput = Input.GetAxis("Horizontal");
+        yInput = Input.GetAxis("Vertical");
 
-        //    switch (xInput)
-        //    {
-        //        case 1:
-        //            StartCoroutine(Move(1, true));
-        //            break;
-        //        case -1:
-        //            StartCoroutine(Move(-1, true));
-        //            break;
-        //    }
-        //    switch (yInput)
-        //    {
-        //        case 1:
-        //            StartCoroutine(Move(1, false));
-        //            break;
-        //        case -1:
-        //            StartCoroutine(Move(-1, false));
-        //            break;
-        //    }
         isGrounded = Physics.Raycast(groundCheckSphere.transform.position, Vector3.down, groundCheckDistance, groundLayer);
 
         if (isGrounded && playerVelocity.y < 0)
@@ -93,52 +57,25 @@ public class PlayerController : MonoBehaviour
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
         }
 
-
-
         playerVelocity.y += gravityValue * Time.deltaTime;
 
-        Vector3 move = transform.right * Input.GetAxis("Horizontal") * playerSpeed + transform.forward * Input.GetAxis("Vertical") * playerSpeed;
+        Vector3 move = transform.right * xInput * playerSpeed + transform.forward * yInput * playerSpeed;
         characterController.Move(move * Time.deltaTime);
 
         characterController.Move(playerVelocity * Time.deltaTime);
-        //if (Input.GetKeyDown(KeyCode.W) && characterController.isGrounded)
-        //{
-        //    Jump();
-        //}
-        //if (Input.GetKeyUp(KeyCode.W))
-        //{
-        //    while (!characterController.isGrounded)
-        //        characterController.Move(Vector3.down * fallSpeed * Time.deltaTime);
-        //}
-        //if (yInput > 0) Jump();
-        //else if (yInput < 0) Crouch();
-        //else Uncrouch();
+
+        Vector3 moveDirection = new Vector3(xInput, 0, yInput);
+        moveDirection.Normalize();
+
+        if (moveDirection != Vector3.zero)
+        {
+            playerMesh. transform.forward = moveDirection;
+        }
     }
 
     private void ToggleGroundPlane(bool rotated)
     {
-        Vector3 newPos = transform.position - new Vector3(0, yOffset, 0);
-        //groundVertical.transform.position = newPos;
-        //groundHorizontal.transform.position = newPos;
-        //groundVertical.SetActive(rotated);
-        //groundHorizontal.SetActive(!rotated);
-    }
-
-    private void CheckMovement()
-    {
-        
-        //if (!rotated)
-        //{
-        //    characterController.Move(Vector3.right * playerSpeed * xInput * Time.deltaTime);
-        //}
-        //else
-        //{
-        //    characterController.Move(Vector3.back * playerSpeed * xInput * Time.deltaTime);
-        //}
-        //if (xInput != 0)
-        //    characterController.Move(Vector3.right * playerSpeed * xInput * Time.deltaTime);
-        //if (yInput != 0)
-        //    characterController.Move(Vector3.forward * playerSpeed * yInput * Time.deltaTime);
+        Vector3 newPos = transform.position - new Vector3(0, yOffset, 0);        
     }
 
     private IEnumerator Move(int direction, bool xAxis)
@@ -185,21 +122,12 @@ public class PlayerController : MonoBehaviour
     {
         transform.localScale = originalSize;
     }
-}
 
-//case (1, true):
-//nextPosition = transform.position + Vector3.right * Time.deltaTime * playerSpeed;
-//transform.position = nextPosition;
-//break;
-//            case (-1, true):            
-//            nextPosition = transform.position + Vector3.left * Time.deltaTime * playerSpeed;
-//transform.position = nextPosition;
-//break; 
-//            case (1, false):
-//                nextPosition = transform.position + Vector3.forward * Time.deltaTime * playerSpeed;
-//transform.position = nextPosition;
-//break;
-//            case (-1, false):
-//                nextPosition = transform.position + Vector3.back * Time.deltaTime * playerSpeed;
-//transform.position = nextPosition;
-//break;
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            GameManager.GM_Instance.RestartLevel();
+        }
+    }
+}
