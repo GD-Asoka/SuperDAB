@@ -1,4 +1,6 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -26,7 +28,9 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundLayer;
     public GameObject playerMesh;
     public float rotationSpeed = 5.0f;
-    private Animator anim;
+    public Animator anim;
+
+    public Vector3 externalMoveSpeed;
 
     private void Awake()
     {
@@ -41,6 +45,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        CheckPlatform();
+
         xInput = Input.GetAxis("Horizontal");
         yInput = Input.GetAxis("Vertical");
 
@@ -54,20 +60,21 @@ public class PlayerController : MonoBehaviour
         // Handle jump input.
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
+            anim.SetBool("jumping", true);
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-            //anim.SetBool("jumping", true);
         }
         else
         {
-            //anim.SetBool("jumping", false);
+            anim.SetBool("jumping", false);
         }    
 
         playerVelocity.y += gravityValue * Time.deltaTime;
 
         Vector3 move = transform.right * xInput * playerSpeed + transform.forward * yInput * playerSpeed;
-        characterController.Move(move * Time.deltaTime);
 
+        
         characterController.Move(playerVelocity * Time.deltaTime);
+        characterController.Move((move + externalMoveSpeed) * Time.deltaTime);
 
         Vector3 moveDirection = new Vector3(xInput, 0, yInput);
         moveDirection.Normalize();
@@ -75,24 +82,48 @@ public class PlayerController : MonoBehaviour
         if (moveDirection != Vector3.zero)
         {
             playerMesh. transform.forward = moveDirection;
-            //anim.SetBool("walking", true);
+            anim.SetBool("walking", true);
         }
         else
         {
-            //anim.SetBool("walking", false);
+            anim.SetBool("walking", false);
         }
+        anim.SetBool("idling", !anim.GetBool("walking") && !anim.GetBool("jumping"));
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            GameManager.GM_Instance.RestartLevel();
+            anim.SetBool("dying", true);            
+            Invoke(nameof(GameManager.GM_Instance.RestartLevel), 0.5f);
         }
         if (other.gameObject.CompareTag("Goal"))
         {
-            print("goal");
-            GameManager.GM_Instance.LoadNextLevel();
+            anim.SetBool("won", true);
+            Invoke(nameof(GameManager.GM_Instance.LoadNextLevel), 0.5f);
+        }
+    }
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private void CheckPlatform()
+    {
+        RaycastHit hit;
+        if(Physics.Raycast(groundCheckSphere.transform.position, Vector3.down, out hit, groundCheckDistance))
+        {
+            if(hit.collider.CompareTag("Platform"))
+            {
+                transform.parent = hit.collider.transform;
+                externalMoveSpeed = hit.collider.GetComponent<MovingPlatform>().externalSpeed;
+            }
+            else
+            {
+                transform.parent = null;
+                externalMoveSpeed = Vector3.zero;
+            }    
         }
     }
 }

@@ -13,6 +13,9 @@ TagManager:
   - Barrier
   - Goal
   - Start
+  - LineOfSight
+  - ZCam
+  - Platform
   layers:
   - Default
   - TransparentFX
