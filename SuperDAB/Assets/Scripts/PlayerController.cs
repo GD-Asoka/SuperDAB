@@ -30,10 +30,14 @@ public class PlayerController : MonoBehaviour
     public float rotationSpeed = 5.0f;
     public Animator anim;
 
+<<<<<<< HEAD:SuperDAB/Assets/Scripts/3D/PlayerController.cs
     private bool isDead = false;
     public float deathWaitTime = 1f;
 
     private float waitTime = 0;
+=======
+    public Vector3 externalMoveSpeed;
+>>>>>>> 389526c5920d3ec9e982ff20c04f70ae7664a55a:SuperDAB/Assets/Scripts/PlayerController.cs
 
     private void Awake()
     {
@@ -48,6 +52,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+<<<<<<< HEAD:SuperDAB/Assets/Scripts/3D/PlayerController.cs
         if(isDead == false)
         {
             xInput = Input.GetAxis("Horizontal");
@@ -58,6 +63,12 @@ public class PlayerController : MonoBehaviour
             xInput = 0;
             yInput = 0;
         }
+=======
+        CheckPlatform();
+
+        xInput = Input.GetAxis("Horizontal");
+        yInput = Input.GetAxis("Vertical");
+>>>>>>> 389526c5920d3ec9e982ff20c04f70ae7664a55a:SuperDAB/Assets/Scripts/PlayerController.cs
 
         isGrounded = Physics.Raycast(groundCheckSphere.transform.position, Vector3.down, groundCheckDistance, groundLayer);
         
@@ -80,9 +91,10 @@ public class PlayerController : MonoBehaviour
         playerVelocity.y += gravityValue * Time.deltaTime;
 
         Vector3 move = transform.right * xInput * playerSpeed + transform.forward * yInput * playerSpeed;
-        characterController.Move(move * Time.deltaTime);
 
+        
         characterController.Move(playerVelocity * Time.deltaTime);
+        characterController.Move((move + externalMoveSpeed) * Time.deltaTime);
 
         Vector3 moveDirection = new Vector3(xInput, 0, yInput);
         moveDirection.Normalize();
@@ -127,11 +139,29 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Goal"))
         {
             anim.SetBool("won", true);
-            Invoke(nameof(GameManager.GM_Instance.LoadNextLevel), 0.5f);            ;
+            Invoke(nameof(GameManager.GM_Instance.LoadNextLevel), 0.5f);
         }
     }
     public void ReloadScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private void CheckPlatform()
+    {
+        RaycastHit hit;
+        if(Physics.Raycast(groundCheckSphere.transform.position, Vector3.down, out hit, groundCheckDistance))
+        {
+            if(hit.collider.CompareTag("Platform"))
+            {
+                transform.parent = hit.collider.transform;
+                externalMoveSpeed = hit.collider.GetComponent<MovingPlatform>().externalSpeed;
+            }
+            else
+            {
+                transform.parent = null;
+                externalMoveSpeed = Vector3.zero;
+            }    
+        }
     }
 }
