@@ -30,6 +30,11 @@ public class PlayerController : MonoBehaviour
     public float rotationSpeed = 5.0f;
     public Animator anim;
 
+    private bool isDead = false;
+    public float deathWaitTime = 1f;
+
+    private float waitTime = 0;
+
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
@@ -43,8 +48,16 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        xInput = Input.GetAxis("Horizontal");
-        yInput = Input.GetAxis("Vertical");
+        if(isDead == false)
+        {
+            xInput = Input.GetAxis("Horizontal");
+            yInput = Input.GetAxis("Vertical");
+        }
+        else
+        {
+            xInput = 0;
+            yInput = 0;
+        }
 
         isGrounded = Physics.Raycast(groundCheckSphere.transform.position, Vector3.down, groundCheckDistance, groundLayer);
         
@@ -84,14 +97,32 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("walking", false);
         }
         anim.SetBool("idling", !anim.GetBool("walking") && !anim.GetBool("jumping"));
+
+        if(isDead)
+        {
+            waitTime += Time.deltaTime;
+            if(waitTime >= deathWaitTime)
+            {
+                GameManager.GM_Instance.RestartLevel();
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            anim.SetBool("dying", true);            
-            Invoke(nameof(GameManager.GM_Instance.RestartLevel), 0.5f);
+        
+            // Debug.Log("Hitted");
+            //anim.SetBool("dying", true);
+            //anim.Play("Die01_SwordAndShield 0");
+            
+            if(isDead == false)
+            {
+                isDead = true;
+                anim.SetTrigger("Death");
+            }
+           //a GameManager.GM_Instance.RestartLevel();
         }
         if (other.gameObject.CompareTag("Goal"))
         {
