@@ -30,14 +30,14 @@ public class PlayerController : MonoBehaviour
     public float rotationSpeed = 5.0f;
     public Animator anim;
 
-<<<<<<< HEAD:SuperDAB/Assets/Scripts/3D/PlayerController.cs
+
     private bool isDead = false;
     public float deathWaitTime = 1f;
 
     private float waitTime = 0;
-=======
+
     public Vector3 externalMoveSpeed;
->>>>>>> 389526c5920d3ec9e982ff20c04f70ae7664a55a:SuperDAB/Assets/Scripts/PlayerController.cs
+
 
     private void Awake()
     {
@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-<<<<<<< HEAD:SuperDAB/Assets/Scripts/3D/PlayerController.cs
+
         if(isDead == false)
         {
             xInput = Input.GetAxis("Horizontal");
@@ -63,12 +63,12 @@ public class PlayerController : MonoBehaviour
             xInput = 0;
             yInput = 0;
         }
-=======
+
         CheckPlatform();
 
         xInput = Input.GetAxis("Horizontal");
         yInput = Input.GetAxis("Vertical");
->>>>>>> 389526c5920d3ec9e982ff20c04f70ae7664a55a:SuperDAB/Assets/Scripts/PlayerController.cs
+
 
         isGrounded = Physics.Raycast(groundCheckSphere.transform.position, Vector3.down, groundCheckDistance, groundLayer);
         
