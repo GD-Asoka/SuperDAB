@@ -10,7 +10,12 @@ TagManager:
   - Object
   - Obstacle
   - Enemy
+  - Barrier
+  - Goal
+  - Start
   - LineOfSight
+  - ZCam
+  - Platform
   layers:
   - Default
   - TransparentFX
