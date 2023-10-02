@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
     public float deathWaitTime = 1f;
 
     private float waitTime = 0;
+
     public Vector3 externalMoveSpeed;
 
 
@@ -50,6 +51,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+
         if(isDead == false)
         {
             xInput = Input.GetAxis("Horizontal");
@@ -60,6 +62,7 @@ public class PlayerController : MonoBehaviour
             xInput = 0;
             yInput = 0;
         }
+
         CheckPlatform();
 
         xInput = Input.GetAxis("Horizontal");
