@@ -7,6 +7,7 @@ using UnityEngine;
 public class UI_Manager : MonoBehaviour
 {
     public bool end;
+    GameObject parent;
 
     private void OnEnable()
     {
@@ -14,12 +15,24 @@ public class UI_Manager : MonoBehaviour
             TEXT.text = "Press space to continue";
     }
 
+    private void Start()
+    {
+        parent = transform.parent.gameObject;
+    }
+
     private void Update()
     {
         if(Input.GetButtonDown("Jump"))
         {
             if(!end)
-            GameManager.GM_Instance.LoadNextLevel();
+            {
+                CanvasGroup CG;
+                if(parent.TryGetComponent<CanvasGroup>(out CG))
+                {
+                    CG.alpha = 0;
+                }
+                GameManager.GM_Instance.LoadNextLevel();
+            }
             else
                 GameManager.GM_Instance.LoadMainMenu();
         }
