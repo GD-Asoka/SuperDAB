@@ -16,6 +16,8 @@ TagManager:
   - LineOfSight
   - ZCam
   - Platform
+  - Rune
+  - Shrine
   layers:
   - Default
   - TransparentFX

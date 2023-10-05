@@ -8,7 +8,9 @@ public class PlayerController : MonoBehaviour
     private float xInput, yInput;
     public float xOffset = 1, yOffset = 5, zOffset = 1;
     private Rigidbody rb;
-    
+    private int collectedRunes = 0;
+    public GameObject shrine;
+
     public float jumpForce = 10;
     public float fallSpeed = 10;
     private Vector3 originalSize;
@@ -89,6 +91,30 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("walking", false);
         }
         anim.SetBool("idling", !anim.GetBool("walking") && !anim.GetBool("jumping"));
+<<<<<<< Updated upstream
+=======
+
+        if(isDead)
+        {
+            waitTime += Time.deltaTime;
+            if(waitTime >= deathWaitTime)
+            {
+                GameManager.GM_Instance.RestartLevel();
+            }
+            if (collectedRunes == 3)
+            {
+                float distanceToShrine = Vector3.Distance(transform.position, shrine.transform.position);
+                Debug.Log("Distance to Shrine: " + distanceToShrine);
+
+                if (distanceToShrine < 2.0f) // Adjust the distance as needed.
+                {
+                    Debug.Log("Player is near the shrine. Loading next level...");
+                    GameManager.GM_Instance.LoadNextLevel();
+                }
+            }
+
+        }
+>>>>>>> Stashed changes
     }
 
     private void OnTriggerEnter(Collider other)
@@ -102,6 +128,12 @@ public class PlayerController : MonoBehaviour
         {
             anim.SetBool("won", true);
             Invoke(nameof(GameManager.GM_Instance.LoadNextLevel), 0.5f);
+        }
+        else if (other.gameObject.CompareTag("Rune"))
+        {
+            // Collect rune and destroy it.
+            collectedRunes++;
+            Destroy(other.gameObject);
         }
     }
     public void ReloadScene()
