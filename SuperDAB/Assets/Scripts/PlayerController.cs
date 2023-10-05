@@ -149,10 +149,11 @@ public class PlayerController : MonoBehaviour
             }
            //a GameManager.GM_Instance.RestartLevel();
         }
-        if (other.gameObject.CompareTag("Goal"))
+        if (other.gameObject.CompareTag("Shrine") && GameManager.GM_Instance.levelComplete)
         {
             anim.SetBool("won", true);
-            Invoke(nameof(GameManager.GM_Instance.LoadNextLevel), 0.5f);
+            GameManager.GM_Instance.LoadNextLevel();
+            //Invoke(nameof(GameManager.GM_Instance.LoadNextLevel), 0.5f);
         }
         else if (other.gameObject.CompareTag("Rune"))
         {

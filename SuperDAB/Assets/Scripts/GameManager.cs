@@ -8,8 +8,9 @@ public class GameManager : MonoBehaviour
     private bool waiting = false;
 
     private int collectedRunes = 0; // New variable to track collected runes
-    public int runesToCollect = 3; // Set to the number of runes needed to complete the level
-    public GameObject shrine; // Reference to the shrine GameObject
+    //public int runesToCollect = 0; // Set to the number of runes needed to complete the level
+    public Shrine shrine; // Reference to the shrine GameObject
+    public bool levelComplete;
 
     private void Awake()
     {
@@ -26,7 +27,16 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        player = GameObject.FindObjectOfType<PlayerController>();
+        player = FindObjectOfType<PlayerController>();
+        shrine = FindObjectOfType<Shrine>();              
+    }
+
+    private void Update()
+    {
+        if(shrine)
+        {
+            levelComplete = collectedRunes == shrine.runes ? true : false;
+        }
     }
 
     public void RestartLevel()
@@ -38,12 +48,6 @@ public class GameManager : MonoBehaviour
     public void CollectRune()
     {
         collectedRunes++;
-
-        if (collectedRunes == runesToCollect)
-        {
-            // All runes collected, show a message or enable interaction with the shrine.
-            shrine.SetActive(true); // Activate the shrine for interaction.
-        }
     }
 
     public void LoadNextLevel()
