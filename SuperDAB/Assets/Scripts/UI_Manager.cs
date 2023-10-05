@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class UI_Manager : MonoBehaviour
 {
+    public bool end;
+
     private void OnEnable()
     {
         if(TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI TEXT))
@@ -16,7 +18,10 @@ public class UI_Manager : MonoBehaviour
     {
         if(Input.GetButtonDown("Jump"))
         {
+            if(!end)
             GameManager.GM_Instance.LoadNextLevel();
+            else
+                GameManager.GM_Instance.LoadMainMenu();
         }
     }
 }

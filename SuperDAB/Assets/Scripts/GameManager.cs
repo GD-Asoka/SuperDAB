@@ -28,7 +28,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         player = FindObjectOfType<PlayerController>();
-        shrine = FindObjectOfType<Shrine>();              
+        shrine = FindObjectOfType<Shrine>();
+        collectedRunes = 0;
     }
 
     private void Update()
@@ -56,5 +57,24 @@ public class GameManager : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
+    }
+    public void LoadMainMenu()
+    {
+            SceneManager.LoadScene(0);
+    }
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        collectedRunes = 0;
     }
 }
