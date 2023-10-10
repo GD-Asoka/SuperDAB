@@ -4,10 +4,10 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager GM_Instance;
-    private PlayerController player;
+    public PlayerController player;
     private bool waiting = false;
 
-    private int collectedRunes = 0; // New variable to track collected runes
+    public int collectedRunes = 0; // New variable to track collected runes
     //public int runesToCollect = 0; // Set to the number of runes needed to complete the level
     public Shrine shrine; // Reference to the shrine GameObject
     public bool levelComplete;
@@ -27,9 +27,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        player = FindObjectOfType<PlayerController>();
-        shrine = FindObjectOfType<Shrine>();
-        collectedRunes = 0;
+        
     }
 
     private void Update()
@@ -75,6 +73,8 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        player = FindObjectOfType<PlayerController>();
+        shrine = FindObjectOfType<Shrine>();
         collectedRunes = 0;
     }
 }
